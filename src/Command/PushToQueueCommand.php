@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Message\SaleReportMessage;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,12 +20,20 @@ class PushToQueueCommand extends Command
     private $messageBus;
 
     /**
-     * PushToQueueCommand constructor.
-     * @param MessageBusInterface $messageBus
+     * @var EntityManagerInterface $em
      */
-    public function __construct(MessageBusInterface $messageBus)
+    private $em;
+
+    /**
+     * PushToQueueCommand constructor.
+     *
+     * @param MessageBusInterface $messageBus
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(MessageBusInterface $messageBus, EntityManagerInterface $em)
     {
         $this->messageBus = $messageBus;
+        $this->em = $em;
 
         parent::__construct();
     }
@@ -33,12 +42,14 @@ class PushToQueueCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        for ($i = 0; $i<100; ++$i)
+        for ($i = 0; $i<10; ++$i)
         {
+            $amount = rand(500, 15000);
+
             $this->messageBus->dispatch(
                 (new SaleReportMessage())
-                ->setType('refund')
-                ->setAmount(6000.4)
+                ->setType($amount % 2 ? 'refund' : 'sale')
+                ->setAmount($amount)
                 ->setUserName('Erkan')
                 ->setAddress('ATASEHIR - ISTANBUL')
             );
