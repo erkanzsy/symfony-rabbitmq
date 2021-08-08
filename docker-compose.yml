@@ -1,0 +1,47 @@
+# docker/docker-compose.yml
+version: '3.1'
+
+services:
+#  tika-mysql:
+#    container_name: tika-mysql
+#    build:
+#      context: docker/mysql
+#    restart: on-failure
+#    environment:
+#      - MYSQL_USER=root
+#      - MYSQL_PASSWORD=root
+#      - MYSQL_ROOT_PASSWORD=root
+#    ports:
+#      - "3306:3306"
+#
+#  tikae-phpmyadmin:
+#    container_name: tika-phpmyadmin
+#    build:
+#      context: docker/phpmyadmin
+#    restart: on-failure
+#    environment:
+#      - PMA_HOST=tika-mysql
+#      - MYSQL_ROOT_PASSWORD=root
+#      - MYSQL_USER=root
+#      - MYSQL_PASSWORD=root
+#    volumes:
+#      - ./phpmyadmin/upload.ini:/usr/local/etc/php/php.ini
+#    ports:
+#      - "7474:80"
+
+  example-rabbitmq:
+    container_name: example-rabbitmq
+    build:
+      context: docker/rabbitmq
+    restart: on-failure
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+
+networks:
+  default:
+    external:
+      name: example
